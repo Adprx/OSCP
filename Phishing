@@ -1,0 +1,53 @@
+## Phishing
+
+```
+Copier une page de login
+
+kali@kali:~$ mkdir ZoomSignin
+kali@kali:~/ZoomSignin$ cd ZoomSignin
+
+kali@kali:~/ZoomSignin$ wget -E -k -K -p -e robots=off -H -Dzoom.us -nd "https://zoom.us/signin#/login"
+
+kali@kali:~/ZoomSignin$ ls -al
+total 6112
+drwxr-xr-x  2 root root    4096 Nov 11 10:56  .
+drwx------ 22 root root    4096 Nov 11 10:56  ..
+-rw-r--r--  1 root root     115 Nov  8 03:40  Add_a_question.png
+-rw-r--r--  1 root root   54696 Nov  8 03:40  AlmadenSans-Book-WebXL.woff
+-rw-r--r--  1 root root   42676 Nov  8 03:40  AlmadenSans-Book-WebXL.woff2
+...
+-rw-r--r--  1 root root    4005 Nov  8 03:40  share-ico-mobile.png
+-rw-r--r--  1 root root   39964 Nov 11 10:56  signin.html
+-rw-r--r--  1 root root   40821 Nov 11 10:56  signin.orig
+-rw-r--r--  1 root root    8461 Nov  8 03:40  social_icons_footer.png
+-rw-r--r--  1 root root     614 Nov  8 03:40  sort.png
+-rw-r--r--  1 root root    1381 Nov 11 10:56  suisse.min.css
+-rw-r--r--  1 root root    1741 Nov  8 03:40  suisse.min.css.orig
+-rw-r--r--  1 root root  362956 Oct 11 09:32  vendors~app.688984ba.js
+-rw-r--r--  1 root root  166967 Nov 11 10:56  vendors~app.fd300935.css
+-rw-r--r--  1 root root  166985 Oct 11 09:31  vendors~app.fd300935.css.orig
+-rw-r--r--  1 root root  417914 Nov  8 03:40  vue.min.js
+-rw-r--r--  1 root root     388 Nov  8 03:40  warning.png
+-rw-r--r--  1 root root     701 Nov  8 03:40  ycal.png
+-rw-r--r--  1 root root     981 Nov 11 10:56 'zm_bundle.js?async'
+-rw-r--r--  1 root root   24617 Nov 11 10:56 'zm_bundle.js?cache'
+-rw-r--r--  1 root root    4286 Oct 22 14:21  zoom.ico
+-rw-r--r--  1 root root  301690 Oct 11 09:32  zoomUI~app.15899df2.js
+
+kali@kali:~/ZoomSignin$ sudo python -m http.server 80
+Serving HTTP on 0.0.0.0 port 80 (http://0.0.0.0:80/) ...
+```
+
+```
+kali@kali:~/ZoomSignin$ grep "OWASP" *
+csrf_js: * The OWASP CSRFGuard Project, BSD License
+csrf_js: *    3. Neither the name of OWASP nor the names of its contributors may be used
+csrf_js:                    this.setRequestHeader("X-Requested-With", "OWASP CSRFGuard Project");
+csrf_js:        alert("OWASP CSRFGuard JavaScript was included from within an unauthorized domain!");
+
+kali@kali:~/ZoomSignin$ grep "csrf_js" *
+csrf_js:        xhr.open("POST", "/csrf_js"+(typeof(resourceAccountIdRoutingURl)!="undefined"?"?"+resourceAccountIdRoutingURl:""), false);
+csrf_js:            xhr.open("POST", "/csrf_js"+(typeof(resourceAccountIdRoutingURl)!="undefined"?"?"+resourceAccountIdRoutingURl:""), false);
+signin.html:<script nonce="Sxwi1J4PRJSzTs4fu1bzvQ" src="csrf_js"></script>
+signin.orig:<script nonce="Sxwi1J4PRJSzTs4fu1bzvQ" src="/csrf_js"></script>
+```

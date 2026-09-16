@@ -91,7 +91,7 @@ snmpwalk -v 2c -c public <IP> -O a
 | `1.3.6.1.2.1.25.4.2.1.2` | **Processus en cours d'exécution** |
 | `1.3.6.1.2.1.25.4.2.1.4` | Chemins des exécutables |
 | `1.3.6.1.2.1.25.4.2.1.5` | **Paramètres de ligne de commande** (⚠️ souvent des creds !) |
-| `1.3.6.1.4.1.8072.1.3.2` | ou NET-SNMP-EXTEND-MIB::nsExtendObjects (⚠️⚠️a marchait dans les labs) |
+| `1.3.6.1.4.1.8072.1.3.2` | ou NET-SNMP-EXTEND-MIB::nsExtendObjects (⚠️⚠️a marché dans les labs) |
 | `1.3.6.1.2.1.25.6.3.1.2` | Logiciels installés |
 | `1.3.6.1.2.1.6.13.1.3` | **Ports TCP en écoute** |
 | `1.3.6.1.2.1.25.2.3.1.4` | Unités de stockage |

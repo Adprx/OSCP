@@ -29,7 +29,7 @@ nmap -sC -sV -p <ports> <IP> -oA scans/<IP>_detailed
 4. Machine standalone 10 pts (si temps restant)
 ```
 
-> 💡 Avec le set AD complet (40 pts) + 1 machine 20 pts + local.txt d'une autre = 70 pts → PASS
+>  Avec le set AD complet (40 pts) + 1 machine 20 pts + local.txt d'une autre = 70 pts → PASS
 
 ---
 
@@ -76,7 +76,7 @@ Pour chaque machine :
 5. **Screenshot proof.txt + whoami + hostname**
 6. **Scripts/exploits utilisés** (inclus en annexe texte)
 
-> ⚠️ Sans screenshot de proof.txt avec whoami et hostname = 0 point pour la machine
+>  Sans screenshot de proof.txt avec whoami et hostname = 0 point pour la machine
 
 ---
 

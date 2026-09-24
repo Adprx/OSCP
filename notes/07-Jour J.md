@@ -1,16 +1,4 @@
-# 07 — Exam Checklist — Jour J
-
-## Avant de commencer
-
-- [ ] Connexion VPN établie et stable
-- [ ] Proctoring lancé et validé
-- [ ] Dossier de notes ouvert (Obsidian)
-- [ ] Template de rapport ouvert
-- [ ] Listener nc ouvert sur port 4444
-- [ ] Serveur HTTP Python prêt (`python3 -m http.server 80`)
-- [ ] Outils transférables prêts (winPEAS, linPEAS, nc.exe, GodPotato...)
-
----
+# 07 — Jour J
 
 ## Stratégie de démarrage (15 premières minutes)
 

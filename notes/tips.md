@@ -1,5 +1,9 @@
 ## Tips à ne pas oublier 
 
+### Lancer ça au cas ou ça leak des creds 
+```powershell
+nxc ldap 10.10.10.1 -u '' -p ''  -d <domaine>  -M get-info-users
+```
 ### Pour chaques nouveaux accès win/ad check l'historique avec la commande :
 ```powershell
 # Afficher le chemin vers fichier historique 

